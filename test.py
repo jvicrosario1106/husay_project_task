@@ -27,6 +27,7 @@ def generate_url(job_title,page):
     format_url = url_template.format(job_title,page)
     return format_url
 
-for i in range(1, 3):
-    url = generate_url("Multimedia Artist", "1") # Change Job title and pages
-    s.get(url)
+
+url = generate_url("Multimedia Artist", "2") # Change Job title and pages
+s.get(url)
+
