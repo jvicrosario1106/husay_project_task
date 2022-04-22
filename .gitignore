@@ -1,3 +1,6 @@
-./job_scaraping_csvraw/.ipynb_checkpoints/
+job_scraping_csvraw/.ipynb_checkpoints
 driver
 .DS_Store
+not-combined-csv
+compiled-csv
+jobs_street_csv
