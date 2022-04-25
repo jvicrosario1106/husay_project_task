@@ -12,10 +12,10 @@ op = webdriver.ChromeOptions()
 s = webdriver.Chrome(service=ser, options=op)
 s.maximize_window()
 
-df = pd.DataFrame(columns=["Title","Company","Location","Summary","Qualification","Role&Responsibilities"])
+df = pd.DataFrame(columns=["Title","Company","SalaryOne","SalaryTwo","Location","Summary","Qualification","Role&Responsibilities"])
 
 state_element = True
-job_title = "sound engineer"
+job_title = "artist"
 
 for page in range(0,100,10):
  
@@ -57,7 +57,18 @@ for page in range(0,100,10):
 
             summary = soup_two.find("div",class_="job-snippet").find('li').text
         except:
-            summary = None
+            summary = "None"
+
+        try:
+            salary = soup_two.find("div",class_="salary-snippet").find("span").text
+
+        except:
+            salary = "None"
+
+        try:
+            salary_two = soup_two.find("div",class_="salary-snippet-container").find("div",class_="attribute_snippet").text 
+        except:
+            salary_two = "None"
 
         section = wait.until(EC.frame_to_be_available_and_switch_to_it((By.XPATH, "//iframe[@id='vjs-container-iframe']")))
         parent = s.find_element(By.ID, 'jobDescriptionText')
@@ -80,7 +91,7 @@ for page in range(0,100,10):
             roles_responsibilities.append(p.text)
 
         s.switch_to.default_content()
-        df = df.append({'Title':title,'Company':company_name,"Location":company_location,"Summary":summary, "Qualification":qualification,"Role&Responsibilities":roles_responsibilities},ignore_index=True)
+        df = df.append({'Title':title,'Company':company_name,"SalaryOne":salary,"SalaryTwo":salary_two,"Location":company_location,"Summary":summary, "Qualification":qualification,"Role&Responsibilities":roles_responsibilities},ignore_index=True)
 
     df.to_csv("Indeed-{}.csv".format(job_title),index=False)
         
