@@ -14,7 +14,7 @@ s.maximize_window()
 
 df = pd.DataFrame(columns=["Title","Company","Location","Summary"])
 
-for page in range(2,4):
+for page in range(2,3):
     url = "https://www.jobstreet.com.ph/en/job-search/{}-jobs/{}/".format("illustrator",page)
     s.get("https://www.jobstreet.com.ph/en/job-search/{}-jobs/{}/".format("illustrator",page))
 
@@ -39,10 +39,22 @@ for page in range(2,4):
         if(description):
             job_descriptions = s.find_element(By.XPATH, "//div[@data-automation='jobDescription']")
             soup_one = bs(job_descriptions.get_attribute("innerHTML"), "html.parser")
-            
             job_details = s.find_element(By.XPATH, "//div[@data-automation='detailsTitle']")  
             soup_two = bs(job_details.get_attribute("innerHTML"),"html.parser")
-            print(soup_two.find("h1").text,soup_two.find("span").text)
+
+            details = s.find_element(By.XPATH, "//div[@class='sx2jih0 _17fduda0 _17fduda3']")
+            soup_three = bs(details.get_attribute("innerHTML"),"html.parser")
+            
+            company_location = soup_three.find_all("span")
+        
+            job_title = soup_two.find("h1").text
+            company_name =soup_two.find("span").text
+            company_location = company_location[0]
+            
+            print(company_location)
+
+
+            
             
             
 s.close()    
