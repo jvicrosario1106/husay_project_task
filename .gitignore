@@ -4,3 +4,5 @@ driver
 not-combined-csv
 compiled-csv
 jobs_street_csv
+old_code
+*.csv
