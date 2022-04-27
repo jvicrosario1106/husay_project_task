@@ -6,6 +6,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup as bs
 import pandas as pd
+from selenium.common.exceptions import TimeoutException
+import re
 
 ser = Service("../driver/chromedriver")
 op = webdriver.ChromeOptions()
@@ -15,9 +17,9 @@ s.maximize_window()
 df = pd.DataFrame(columns=["Title","Company","SalaryOne","SalaryTwo","Location","Summary","Qualification","Role&Responsibilities"])
 
 state_element = True
-job_title = "artist"
+job_title = "beatmaker"
 
-for page in range(0,100,10):
+for page in range(0,130,10):
  
     s.get("https://ph.indeed.com/jobs?q={}&start={}".format(job_title,page))
    
@@ -71,9 +73,22 @@ for page in range(0,100,10):
             salary_two = "None"
 
         section = wait.until(EC.frame_to_be_available_and_switch_to_it((By.XPATH, "//iframe[@id='vjs-container-iframe']")))
-        parent = s.find_element(By.ID, 'jobDescriptionText')
-        soup = bs(parent.get_attribute("innerHTML"),"html.parser")
         
+        # try:
+        #     job_desc = WebDriverWait(s,1).until(EC.frame_to_be_available_and_switch_to_it((By.ID, 'jobDescriptionText')))
+        #     parent = s.find_element(By.ID, 'jobDescriptionText')
+        # except TimeoutException:
+        parent = s.find_element(By.ID, 'jobDescriptionText')
+    
+        soup = bs(parent.get_attribute("innerHTML"),"html.parser")
+
+        try:
+            job_type = soup.find_all("div",class_='jobsearch-JobDescriptionSection-sectionItem')
+        except:
+            job_type = "None"
+        
+        print(job_type)
+
         try:
             li_tag = soup.find_all("li")
         except:
