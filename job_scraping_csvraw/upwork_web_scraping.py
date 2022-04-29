@@ -18,7 +18,7 @@ df = pd.DataFrame(columns=["Title","Description","Location","Skill","Est.Proj-Bu
 
 # }
 job = ["artist", "creative%20director","game%20designer","graphic%20designer","illustrator","motion%20graphic%20artist","multimedia%20artist","musician","producer","singer","sound%20engineer"]
-page = 8
+page = 10
 jobs = job[10]
 skills = []
 template_url = "https://www.upwork.com/nx/jobs/search/?q={}&sort=recency&page={}"

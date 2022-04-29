@@ -17,10 +17,9 @@ df = pd.DataFrame(columns=["Title","Company","Location","Summary","Salary","Qual
 
 #job = ["artist", "creative-director","game-designer","graphic-designer","illustrator","motion-graphic-artist","multimedia-artist","musician","producer","singer","sound-engineer"]
 job = ["sound-engineer"]
-
 for j in range(len(job)):
 
-    for page in range(2,16):
+    for page in range(2,20):
         
         url = "https://www.jobstreet.com.ph/en/job-search/{}-jobs/{}/".format(job[j],page)
         s.get("https://www.jobstreet.com.ph/en/job-search/{}-jobs/{}/".format(job[j],page))
