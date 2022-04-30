@@ -1,5 +1,5 @@
 Scraping/.ipynb_checkpoints
-Data Analysis/.ipynb_checkpoints
+*.ipynb_checkpoints
 driver
 .DS_Store
 not-combined-csv
