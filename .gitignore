@@ -8,3 +8,4 @@ old_code
 *.csv
 Raw_CSV
 count.ipynb
+node_modules
