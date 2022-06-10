@@ -1,9 +1,20 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
+const { convertArrayToCSV } = require("convert-array-to-csv");
+const nodemailer = require("nodemailer");
 const app = express();
 
 app.use(cors({ origin: true }));
+
+// Node Mailer
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "dataanalytics369@gmail.com",
+    pass: "dskotjtranfbceao",
+  },
+});
 
 const API_KEY =
   "c06cc87167ff82c14347678ee97e37dcadfbcef75692e41e8cc1c71f29d62a01";
@@ -24,6 +35,8 @@ app.get("/job-api", (req, res) => {
   ];
 
   listOfJobs.forEach((job) => {
+    const datas = [];
+
     try {
       axios
         .get(
@@ -31,21 +44,61 @@ app.get("/job-api", (req, res) => {
         )
         .then((data) => {
           data.data.jobs_results.map((results) => {
-            console.log(results.title);
-            console.log(results.company_name);
-            console.log(results.location);
-            console.log(results.via);
-            console.log(results.description);
-            console.log(results.extensions[1]);
-            console.log(
-              results.detected_extensions.schedule_type &&
-                results.detected_extensions.schedule_type
-            );
+            datas.push({
+              title: results.title,
+              company: results.company_name,
+              location: results.location,
+              via: results.via,
+              description: results.description,
+              extension: results.extensions[1],
+              scheduleType:
+                results.detected_extensions.schedule_type &&
+                results.detected_extensions.schedule_type,
+            });
           });
 
-          data.data.chips.map((results) => {});
+          // Company Type
+          let companyType = [];
+          const company_type = data.data.chips.filter(
+            (chip) => chip.type == "Company type"
+          );
+
+          company_type.options?.map((ct) => companyType.push(ct.text));
+
+          // Employer Type
+          let employerType = [];
+          const employer = data.data.chips.filter(
+            (chip) => chip.type == "Employer"
+          );
+          employer.options?.map((ct) => employerType.push(ct.text));
+
+          // Array to CSV
+          const csvData = convertArrayToCSV(datas);
+
+          // Nodemailer Options
+          var mailOptions = {
+            from: "dataanalytics369@gmail.com",
+            to: "juliusrosario.senti@gmail.com",
+            subject: "Hello",
+            text: "Hello world",
+            html: "<b>Hello world</b>",
+            attachments: [
+              {
+                filename: `${job}.csv`,
+                content: csvData, // attaching csv in the content
+              },
+            ],
+          };
+
+          transporter.sendMail(mailOptions, function (err, info) {
+            if (err) {
+              console.log("Err,", err);
+            } else {
+              console.log("Successfull");
+            }
+          });
         })
-        .catch((err) => console.log(err.data));
+        .catch((err) => console.log(err));
     } catch (err) {
       console.error("Error: ", err);
     }
