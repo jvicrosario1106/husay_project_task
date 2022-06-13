@@ -5,7 +5,7 @@ const { convertArrayToCSV } = require("convert-array-to-csv");
 const nodemailer = require("nodemailer");
 const app = express();
 
-app.use(cors({ origin: true }));
+app.use(cors());
 
 // Node Mailer
 let transporter = nodemailer.createTransport({
@@ -60,32 +60,46 @@ app.get("/job-api", (req, res) => {
           // Company Type
           let companyType = [];
           const company_type = data.data.chips.filter(
-            (chip) => chip.type == "Company type"
+            (chip) => chip.type === "Company type"
           );
 
-          company_type.options?.map((ct) => companyType.push(ct.text));
+          company_type[0].options.map((ct) =>
+            companyType.push({ companyType: ct.text })
+          );
 
           // Employer Type
           let employerType = [];
           const employer = data.data.chips.filter(
-            (chip) => chip.type == "Employer"
+            (chip) => chip.type === "Employer"
           );
-          employer.options?.map((ct) => employerType.push(ct.text));
+          employer[0].options.map((ct) =>
+            employerType.push({ employerType: ct.text })
+          );
 
           // Array to CSV
           const csvData = convertArrayToCSV(datas);
+          const ctData = convertArrayToCSV(companyType);
+          const etData = convertArrayToCSV(employerType);
 
-          // Nodemailer Options
+          //Nodemailer Options
           var mailOptions = {
             from: "dataanalytics369@gmail.com",
             to: "juliusrosario.senti@gmail.com",
-            subject: "Hello",
-            text: "Hello world",
-            html: "<b>Hello world</b>",
+            subject: "Job-API",
+            text: "Job-API",
+            html: "<b>Job-API</b>",
             attachments: [
               {
                 filename: `${job}.csv`,
                 content: csvData, // attaching csv in the content
+              },
+              {
+                filename: `${job}-CT.csv`,
+                content: ctData, // attaching csv in the content
+              },
+              {
+                filename: `${job}-ET.csv`,
+                content: etData, // attaching csv in the content
               },
             ],
           };
