@@ -5,7 +5,7 @@ const { convertArrayToCSV } = require("convert-array-to-csv");
 const nodemailer = require("nodemailer");
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: true }));
 
 // Node Mailer
 let transporter = nodemailer.createTransport({
@@ -21,17 +21,17 @@ const API_KEY =
 
 app.get("/job-api", (req, res) => {
   const listOfJobs = [
-    "graphic+designer",
-    "illustrator",
-    "motion+graphic+artist",
-    "producer",
-    "artist",
-    "creative+director",
-    "game+designer",
-    "multimedia+artist",
-    "musician",
-    "singer",
-    "sound+engineer",
+    "graphic+designer", //
+    "illustrator", //
+    "motion+graphics+artist", //
+    "producer", //
+    "artist", //
+    "creative+director", //
+    "game+designer", //
+    "multimedia+artist", //
+    "musician", //
+    "singer", //
+    // "sound+engineer",
   ];
 
   listOfJobs.forEach((job) => {
@@ -63,18 +63,21 @@ app.get("/job-api", (req, res) => {
             (chip) => chip.type === "Company type"
           );
 
-          company_type[0].options.map((ct) =>
-            companyType.push({ companyType: ct.text })
-          );
+          company_type.length > 0 &&
+            company_type[0].options.map((ct) =>
+              companyType.push({ companyType: ct.text })
+            );
 
           // Employer Type
           let employerType = [];
           const employer = data.data.chips.filter(
             (chip) => chip.type === "Employer"
           );
-          employer[0].options.map((ct) =>
-            employerType.push({ employerType: ct.text })
-          );
+
+          employer.length > 0 &&
+            employer[0].options.map((ct) =>
+              employerType.push({ employerType: ct.text })
+            );
 
           // Array to CSV
           const csvData = convertArrayToCSV(datas);
