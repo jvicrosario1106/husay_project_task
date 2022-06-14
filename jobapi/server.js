@@ -16,6 +16,7 @@ let transporter = nodemailer.createTransport({
   },
 });
 
+// API KEY For SerpAPI
 const API_KEY =
   "c06cc87167ff82c14347678ee97e37dcadfbcef75692e41e8cc1c71f29d62a01";
 
@@ -34,6 +35,7 @@ app.get("/job-api", (req, res) => {
     // "sound+engineer",
   ];
 
+  // Looping Job List to Array
   listOfJobs.forEach((job) => {
     const datas = [];
 
@@ -63,6 +65,7 @@ app.get("/job-api", (req, res) => {
             (chip) => chip.type === "Company type"
           );
 
+          // Insert To Company Type Array
           company_type.length > 0 &&
             company_type[0].options.map((ct) =>
               companyType.push({ companyType: ct.text })
@@ -74,6 +77,7 @@ app.get("/job-api", (req, res) => {
             (chip) => chip.type === "Employer"
           );
 
+          // Insert To Employer Array
           employer.length > 0 &&
             employer[0].options.map((ct) =>
               employerType.push({ employerType: ct.text })
@@ -107,6 +111,7 @@ app.get("/job-api", (req, res) => {
             ],
           };
 
+          // Sending Email ( CSV File Attachments )
           transporter.sendMail(mailOptions, function (err, info) {
             if (err) {
               console.log("Err,", err);
@@ -122,10 +127,12 @@ app.get("/job-api", (req, res) => {
   });
 });
 
+// Listen to Server
 app.listen(3000, () => {
   console.log("Listing to port 3000");
 });
 
+// Exporting Server
 module.exports = {
   app,
 };
