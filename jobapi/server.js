@@ -20,7 +20,7 @@ let transporter = nodemailer.createTransport({
 const API_KEY =
   "c06cc87167ff82c14347678ee97e37dcadfbcef75692e41e8cc1c71f29d62a01";
 
-app.get("/job-api", (req, res) => {
+app.get("/job-api/:page", (req, res) => {
   const listOfJobs = [
     "graphic+designer", //
     "illustrator", //
@@ -34,15 +34,15 @@ app.get("/job-api", (req, res) => {
     "singer", //
     // "sound+engineer", // No Job List in API
   ];
+  const { page } = req.params;
 
   // Looping Job List to Array
   listOfJobs.forEach((job) => {
     const datas = [];
-
     try {
       axios
         .get(
-          `https://serpapi.com/search.json?engine=google_jobs&q=${job}+philippines&hl=en&api_key=${API_KEY}`
+          `https://serpapi.com/search.json?engine=google_jobs&q=${job}+philippines&hl=en&api_key=${API_KEY}&start=${page}`
         )
         .then((data) => {
           data.data.jobs_results.map((results) => {
@@ -58,36 +58,30 @@ app.get("/job-api", (req, res) => {
                 results.detected_extensions.schedule_type,
             });
           });
-
           // Company Type
           let companyType = [];
           const company_type = data.data.chips.filter(
             (chip) => chip.type === "Company type"
           );
-
           // Insert To Company Type Array
           company_type.length > 0 &&
             company_type[0].options.map((ct) =>
               companyType.push({ companyType: ct.text })
             );
-
           // Employer Type
           let employerType = [];
           const employer = data.data.chips.filter(
             (chip) => chip.type === "Employer"
           );
-
           // Insert To Employer Array
           employer.length > 0 &&
             employer[0].options.map((ct) =>
               employerType.push({ employerType: ct.text })
             );
-
           // Array to CSV
           const csvData = convertArrayToCSV(datas);
           const ctData = convertArrayToCSV(companyType);
           const etData = convertArrayToCSV(employerType);
-
           //Nodemailer Options
           var mailOptions = {
             from: "dataanalytics369@gmail.com",
@@ -110,7 +104,6 @@ app.get("/job-api", (req, res) => {
               },
             ],
           };
-
           // Sending Email ( CSV File Attachments )
           transporter.sendMail(mailOptions, function (err, info) {
             if (err) {
