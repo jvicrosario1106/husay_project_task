@@ -3,12 +3,15 @@
     "start": "nodemon server.js"
   },
   "dependencies": {
+    "@google-cloud/storage": "^6.2.3",
     "axios": "^0.27.2",
     "convert-array-to-csv": "^2.0.0",
     "cors": "^2.8.5",
+    "csv-writer": "^1.6.0",
     "express": "^4.18.1",
     "nodemailer": "^6.7.5",
     "nodemon": "^2.0.16",
-    "puppeteer": "^14.3.0"
+    "puppeteer": "^14.3.0",
+    "request": "^2.88.2"
   }
 }
